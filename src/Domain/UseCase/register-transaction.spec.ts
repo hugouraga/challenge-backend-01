@@ -5,7 +5,7 @@ import { User } from '../Entity/User'
 import { Wallet } from '../Entity/Wallet'
 import { Merchant } from '../Entity/Merchant'
 
-import { UserRespository } from '../../Application/Repository/user-repository'
+import { UserRepository } from '../../Application/Repository/user-repository'
 import { MerchantRepository } from '../../Application/Repository/merchant-repositoty'
 import { PaymentAutorizationGatewayInteraface } from '../../Application/Gateway/payment-authorization-gateway-interface'
 import { WalletRepository } from '../../Application/Repository/wallet-repository'
@@ -18,7 +18,7 @@ import { InMemoryUserRepository } from '../../Test/Repository/user-repository-te
 import { TestPaymentAutorizationGateway } from '../../Test/Gateway/payment-authorization-gateway-test'
 
 describe('create transaction', () => {
-  let userRespository: UserRespository
+  let UserRepository: UserRepository
   let walletRepository: WalletRepository
   let merchantRepository: MerchantRepository
   let transactionRepository: TransactionRepository
@@ -27,7 +27,7 @@ describe('create transaction', () => {
   beforeEach(() => {})
 
   it('should be able to create transaction', async () => {
-    userRespository = new InMemoryUserRepository()
+    UserRepository = new InMemoryUserRepository()
     walletRepository = new InMemoryWalletRepository()
     merchantRepository = new InMemoryMerchantRepository()
     transactionRepository = new InMemoryTransactionRepository()
@@ -36,9 +36,10 @@ describe('create transaction', () => {
     const user = User.create({
       cpf: '404.600.360-09',
       name: 'John Doe',
+      email: 'JohnDoe@gmail.com',
       password: 'teste@JohnDoe',
     })
-    await userRespository.create(user)
+    await UserRepository.create(user)
 
     const wallet = Wallet.create({ idUser: user.id })
     await walletRepository.create(wallet)
@@ -54,7 +55,7 @@ describe('create transaction', () => {
     await merchantRepository.create(merchant)
 
     const createTransactionUseCase = new RegisterTransactionUseCase(
-      userRespository,
+      UserRepository,
       merchantRepository,
       walletRepository,
       paymentAuthorizationGateway,

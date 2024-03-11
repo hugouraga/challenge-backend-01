@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto'
-import { StatusTransactionState } from './Value-object/State/StatusTransacion/StatusTransactionState'
-import { StartedTransactionState } from './Value-object/State/StatusTransacion/StartedTransactionState'
+import { StatusTransactionState } from './Value-object/StatusTransacion/StatusTransactionState'
+import { StartedTransactionState } from './Value-object/StatusTransacion/StartedTransactionState'
 
 export interface TransactionProps {
   id: string

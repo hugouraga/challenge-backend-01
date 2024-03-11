@@ -1,6 +1,6 @@
 import { PaymentAutorizationGatewayInteraface } from '@/Application/Gateway/payment-authorization-gateway-interface'
 import { MerchantRepository } from '@/Application/Repository/merchant-repositoty'
-import { UserRespository } from '@/Application/Repository/user-repository'
+import { UserRepository } from '@/Application/Repository/user-repository'
 import { User } from '../Entity/User'
 import { Merchant } from '../Entity/Merchant'
 import { WalletRepository } from '@/Application/Repository/wallet-repository'
@@ -15,7 +15,7 @@ interface RegisterTransactionUseCaseRequest {
 
 export class RegisterTransactionUseCase {
   constructor(
-    private userRespository: UserRespository,
+    private UserRepository: UserRepository,
     private merchantRepository: MerchantRepository,
     private walletRepository: WalletRepository,
     private paymentAuthorizationGateway: PaymentAutorizationGatewayInteraface,
@@ -27,14 +27,14 @@ export class RegisterTransactionUseCase {
     typeReceiving,
     value,
   }: RegisterTransactionUseCaseRequest) {
-    const user = await this.userRespository.findById(idUserSending)
+    const user = await this.UserRepository.findById(idUserSending)
     if (!user) throw new Error('User not found')
     const userWallet = await this.walletRepository.findByIdUser(user.id)
     if (!userWallet) throw new Error('Wallet not found')
     if (userWallet.getBalance() < value) throw new Error('insufficient funds')
     let receiver: User | Merchant | null
     if (typeReceiving === 'user') {
-      receiver = await this.userRespository.findById(idReceiving)
+      receiver = await this.UserRepository.findById(idReceiving)
     } else {
       receiver = await this.merchantRepository.findById(idReceiving)
     }
