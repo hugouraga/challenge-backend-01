@@ -22,4 +22,22 @@ describe('Register  User', () => {
     expect(user.id).toBeDefined()
     expect(user.email).toBe('hugouraga61@gmail.com')
   })
+
+  it('should do not create a new user', async () => {
+    await registerUserUseCase.execute({
+      name: 'Hugo Uraga',
+      email: 'hugouraga61@gmail.com',
+      cpf: '404.600.360-09',
+      password: 'test@1234',
+    })
+
+    expect(async () => {
+      await registerUserUseCase.execute({
+        name: 'Hugo Uraga',
+        email: 'hugouraga61@gmail.com',
+        cpf: '404.600.360-09',
+        password: 'test@1234',
+      })
+    }).rejects.toEqual(Error('User already exist'))
+  })
 })
